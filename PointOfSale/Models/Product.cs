@@ -1,7 +1,7 @@
 ﻿
 namespace PointOfSale.Models
 {
-    public class Product : IProduct
+    public abstract class Product : IProduct
     {
         private readonly Price _price = new Price();
 
