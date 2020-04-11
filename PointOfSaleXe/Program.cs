@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PointOfSale;
 using POS = PointOfSale.PointOfSale;
 using Terminal = PointOfSale.PointOfSaleTerminal;
 using PointOfSale.Models;
@@ -9,7 +10,18 @@ namespace PointOfSaleXe
 {
     class Program
     {
+        private static IPointOfSale _pointOfSale;
+        private static IPointOfSaleTerminal _terminal;
+
         static void Main(string[] args)
+        {
+            Init();
+
+            var customerService = new CustomerService(_terminal);
+            customerService.ProcessCustomers();
+        }
+
+        private static void Init()
         {
             var productA = new ProductA();
             var productB = new ProductB();
@@ -20,83 +32,38 @@ namespace PointOfSaleXe
                 productA, productB, productC, productD
             };
 
-            var saleOfPoint = new POS(products);
-            var terminal = new Terminal(saleOfPoint);
+            _pointOfSale = new POS(products);
+            _terminal = new Terminal(_pointOfSale);
 
-            try
+            Utils.DoSafe(() =>
             {
-                terminal.SetPricing(productA.Code, (decimal)1.25d);
-                terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
-                terminal.SetPricing(productB.Code, (decimal)4.25d);
-                terminal.SetPricing(productC.Code, (decimal)1.00d);
-                terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
-                terminal.SetPricing(productD.Code, (decimal)0.75d);
+                _terminal.SetPricing(productA.Code, (decimal)1.25d);
+            });
 
-                var customerA = new Customer();
-                customerA.ShoppingCart = new List<IProduct> {
-                    productA,
-                    productB,
-                    productC,
-                    productD,
-                    productA,
-                    productB,
-                    productA
-                };
-
-                foreach (var product in customerA.ShoppingCart)
-                {
-                    terminal.ScanProduct(product.Code);
-                }
-
-                PrintBill(customerA, terminal.CalculateTotal());
-
-                var customerB = new Customer();
-                customerB.ShoppingCart = new List<IProduct> {
-                    productC,
-                    productC,
-                    productC,
-                    productC,
-                    productC,
-                    productC,
-                    productC
-                };
-
-                foreach (var product in customerB.ShoppingCart)
-                {
-                    terminal.ScanProduct(product.Code);
-                }
-
-                PrintBill(customerB, terminal.CalculateTotal());
-
-                var customerC = new Customer();
-                customerC.ShoppingCart = new List<IProduct> {
-                    productA,
-                    productB,
-                    productC,
-                    productD,
-                };
-
-                foreach (var product in customerC.ShoppingCart)
-                {
-                    terminal.ScanProduct(product.Code);
-                }
-
-                PrintBill(customerC, terminal.CalculateTotal());
-            }
-            catch (Exception e)
+            Utils.DoSafe(() =>
             {
-                Console.WriteLine(e.Message);
-            }
-        }
+                _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
+            });
 
-        private static void PrintBill(Customer customer, decimal totalPrice)
-        {
-            var codeList = customer.ShoppingCart.Select(item => item.Code);
-            var codeListString = String.Concat(codeList);
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productB.Code, (decimal)4.25d);
+            });
 
-            Console.WriteLine($"Shopping items: {codeListString}");
-            Console.WriteLine(string.Format("Total price: ${0:0.00}", totalPrice));
-            Console.WriteLine();
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productC.Code, (decimal)1.00d);
+            });
+
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
+            });
+
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productD.Code, (decimal)0.75d);
+            });
         }
     }
 }
