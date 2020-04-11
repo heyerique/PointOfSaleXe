@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using PointOfSale;
 using PointOfSale.Models;
 
@@ -8,7 +6,7 @@ namespace PointOfSaleXe
 {
     public class CustomerService
     {
-        private static IPointOfSaleTerminal _terminal;
+        private readonly IPointOfSaleTerminal _terminal;
 
         public CustomerService(IPointOfSaleTerminal terminal)
         {
