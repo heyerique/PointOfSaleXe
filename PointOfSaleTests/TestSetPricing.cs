@@ -74,7 +74,6 @@ namespace PointOfSaleTests
 
         [TestCase("a", 3.25d, 3)]
         [TestCase("B", 2.00d, 3)]
-        [TestCase("c", 1.25d, 1)]
         [TestCase("D", 6.00d, 6)]
         public void TestSetVolumePrice1(string productCode, decimal price, int volume)
         {
@@ -102,6 +101,21 @@ namespace PointOfSaleTests
 
             Assert.AreEqual(product.Price.VolumePrice, 0);
             Assert.AreEqual(product.Price.MaxVolume, 1);
+        }
+
+        [TestCase("c", 1.25d, 1)]
+        public void TestSetVolumePrice3(string productCode, decimal price, int volume)
+        {
+            _terminal.SetPricing(productCode, price, volume);
+
+            var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
+
+            Assert.IsNotNull(product);
+            Assert.IsNotNull(product.Price);
+
+            Assert.AreEqual(product.Price.UnitPrice, price);
+            Assert.AreEqual(product.Price.VolumePrice, 0);
+            Assert.AreEqual(product.Price.MaxVolume, volume);
         }
     }
 }
