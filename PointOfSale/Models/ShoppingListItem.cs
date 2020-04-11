@@ -40,7 +40,9 @@ namespace PointOfSale.Models
         {
             get
             {
-                if (Count == 0)
+                if (Product == null
+                    || Product.Price == null
+                    || Count == 0)
                 {
                     return 0;
                 }

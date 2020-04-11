@@ -28,19 +28,6 @@ namespace PointOfSale.Models
             listItem.AddCount();
         }
 
-        public decimal TotalPrice
-        {
-            get
-            {
-                decimal totalPrice = 0;
-
-                foreach (var item in ShoppingList)
-                {
-                    totalPrice += item.TotalPrice;
-                }
-
-                return totalPrice;
-            }
-        }
+        public decimal TotalPrice => _shoppingListItems.Select(item => item.TotalPrice).Sum();
     }
 }

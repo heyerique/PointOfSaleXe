@@ -18,10 +18,12 @@ namespace PointOfSale
 
         public PointOfSaleTerminal(IPointOfSale pointOfSale)
         {
-            if (pointOfSale != null)
+            if (pointOfSale == null)
             {
-                _pointOfSale = pointOfSale;
+                return;
             }
+
+            _pointOfSale = pointOfSale;
         }
 
         public decimal CalculateTotal()

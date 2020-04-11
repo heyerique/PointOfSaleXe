@@ -41,6 +41,12 @@ namespace PointOfSale.Models
                 return;
             }
 
+            if (maxVolume == 1)
+            {
+                SetPrice(volumePrice);
+                return;
+            }
+
             VolumePrice = volumePrice;
             MaxVolume = maxVolume;
         }
