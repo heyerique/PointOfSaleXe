@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using PointOfSale;
+using System.Linq;
+using POS = PointOfSale.PointOfSale;
+using Terminal = PointOfSale.PointOfSaleTerminal;
 using PointOfSale.Models;
 
 namespace PointOfSaleXe
@@ -18,15 +20,15 @@ namespace PointOfSaleXe
                 productA, productB, productC, productD
             };
 
-            var saleOfPoint = new PointOfSale.PointOfSale(products);
-            var terminal = new PointOfSaleTerminal(saleOfPoint);
+            var saleOfPoint = new POS(products);
+            var terminal = new Terminal(saleOfPoint);
 
-            terminal.SetPricing(productA.Code, (decimal)1.25);
-            terminal.SetPricing(productA.Code, (decimal)3.00, 3);
-            terminal.SetPricing(productB.Code, (decimal)4.25);
-            terminal.SetPricing(productC.Code, (decimal)1.00);
-            terminal.SetPricing(productC.Code, (decimal)5.00, 6);
-            terminal.SetPricing(productD.Code, (decimal)0.75);
+            terminal.SetPricing(productA.Code, (decimal)1.25d);
+            terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
+            terminal.SetPricing(productB.Code, (decimal)4.25d);
+            terminal.SetPricing(productC.Code, (decimal)1.00d);
+            terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
+            terminal.SetPricing(productD.Code, (decimal)0.75d);
 
             var customerA = new Customer();
             customerA.ShoppingCart = new List<IProduct> {
@@ -44,8 +46,7 @@ namespace PointOfSaleXe
                 terminal.ScanProduct(product.Code);
             }
 
-            var printTemp = "Verify that the total price is: {0:0.00}";
-            Console.WriteLine(String.Format(printTemp, terminal.CalculateTotal()));
+            PrintBill(customerA, terminal.CalculateTotal());
 
             var customerB = new Customer();
             customerB.ShoppingCart = new List<IProduct> {
@@ -63,7 +64,7 @@ namespace PointOfSaleXe
                 terminal.ScanProduct(product.Code);
             }
 
-            Console.WriteLine(String.Format(printTemp, terminal.CalculateTotal()));
+            PrintBill(customerB, terminal.CalculateTotal());
 
             var customerC = new Customer();
             customerC.ShoppingCart = new List<IProduct> {
@@ -78,7 +79,17 @@ namespace PointOfSaleXe
                 terminal.ScanProduct(product.Code);
             }
 
-            Console.WriteLine(String.Format(printTemp, terminal.CalculateTotal()));
+            PrintBill(customerC, terminal.CalculateTotal());
+        }
+
+        private static void PrintBill(Customer customer, decimal totalPrice)
+        {
+            var codeList = customer.ShoppingCart.Select(item => item.Code);
+            var codeListString = String.Concat(codeList);
+
+            Console.WriteLine($"Shopping items: {codeListString}");
+            Console.WriteLine(String.Format("Total price: ${0:0.00}", totalPrice));
+            Console.WriteLine();
         }
     }
 }
