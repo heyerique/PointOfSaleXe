@@ -52,6 +52,9 @@ namespace PointOfSaleTests
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
             Assert.IsNotNull(product);
+            Assert.IsNotNull(_terminal.Bill);
+            Assert.IsNotEmpty(_terminal.Bill.ShoppingList);
+
             Assert.AreEqual(_terminal.CalculateTotal(), product.Price.UnitPrice);
         }
 
@@ -68,6 +71,9 @@ namespace PointOfSaleTests
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
             Assert.IsNotNull(product);
+            Assert.IsNotNull(_terminal.Bill);
+            Assert.IsNotEmpty(_terminal.Bill.ShoppingList);
+
             Assert.AreEqual(_terminal.CalculateTotal(), product.Price.UnitPrice * count);
         }
 
@@ -81,6 +87,9 @@ namespace PointOfSaleTests
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
             Assert.IsNotNull(product);
+            Assert.IsNotNull(_terminal.Bill);
+            Assert.IsNotEmpty(_terminal.Bill.ShoppingList);
+
             Assert.AreEqual(_terminal.CalculateTotal(), product.Price.VolumePrice);
         }
 
@@ -94,6 +103,8 @@ namespace PointOfSaleTests
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
             Assert.IsNull(product);
+            Assert.IsNull(_terminal.Bill);
+
             Assert.AreEqual(_terminal.CalculateTotal(), 0);
         }
     }

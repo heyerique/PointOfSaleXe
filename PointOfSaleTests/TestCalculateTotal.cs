@@ -46,42 +46,28 @@ namespace PointOfSaleTests
         public void TestShoppingCart(string codes, decimal totalPrice)
         {
             var codeList = codes.ToCharArray().ToList();
+            var distinctCodeList = codeList.Distinct();
 
             foreach (var code in codeList)
             {
                 _terminal.ScanProduct(code.ToString());
             }
 
-            var codeA = codeList.Where(code => code == 'A');
-            var codeB = codeList.Where(code => code == 'B');
-            var codeC = codeList.Where(code => code == 'C');
-            var codeD = codeList.Where(code => code == 'D');
-
-            var itemA = _terminal.Bill.ShoppingList.FirstOrDefault(item => item.Product.Equals("A"));
-            var itemB = _terminal.Bill.ShoppingList.FirstOrDefault(item => item.Product.Equals("B"));
-            var itemC = _terminal.Bill.ShoppingList.FirstOrDefault(item => item.Product.Equals("C"));
-            var itemD = _terminal.Bill.ShoppingList.FirstOrDefault(item => item.Product.Equals("D"));
-
-
-            if (itemA != null)
+            foreach (var code in distinctCodeList)
             {
-                Assert.AreEqual(itemA.Count, codeA.Count());
+                var codeCount = codeList.Count(c => c == code);
+                var item = _terminal.Bill.ShoppingList.FirstOrDefault(item => item.Product.Equals(code.ToString()));
+
+                if (item != null)
+                {
+                    Assert.AreEqual(codeCount, item.Count);
+                }
             }
 
-            if (itemB != null)
-            {
-                Assert.AreEqual(itemB.Count, codeB.Count());
-            }
+            Assert.IsNotNull(_terminal.Bill);
+            Assert.IsNotEmpty(_terminal.Bill.ShoppingList);
 
-            if (itemC != null)
-            {
-                Assert.AreEqual(itemC.Count, codeC.Count());
-            }
-
-            if (itemD != null)
-            {
-                Assert.AreEqual(itemD.Count, codeD.Count());
-            }
+            Assert.AreEqual(_terminal.Bill.ShoppingList.Count, distinctCodeList.Count());
 
             Assert.AreEqual(_terminal.CalculateTotal(), totalPrice);
         }
