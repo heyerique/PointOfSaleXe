@@ -5,7 +5,7 @@ namespace PointOfSale.Models
 {
     public interface IBill
     {
-        public decimal TotalPrice { get; }
-        public List<IShoppingListItem> ShoppingList { get; }
+        decimal TotalPrice { get; }
+        List<IShoppingListItem> ShoppingList { get; }
     }
 }

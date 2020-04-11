@@ -3,8 +3,8 @@ namespace PointOfSale.Models
 {
     public interface IPrice
     {
-        public decimal UnitPrice { get; }
-        public decimal VolumePrice { get; }
-        public int MaxVolume { get; }
+        decimal UnitPrice { get; }
+        decimal VolumePrice { get; }
+        int MaxVolume { get; }
     }
 }

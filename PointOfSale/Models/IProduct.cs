@@ -3,8 +3,12 @@ namespace PointOfSale.Models
 {
     public interface IProduct
     {
-        public string Code { get; }
+        string Code { get; }
 
-        public IPrice Price { get; }
+        IPrice Price { get; }
+
+        bool Equals(object obj);
+
+        bool Equals(string code);
     }
 }

@@ -5,8 +5,8 @@ namespace PointOfSale.Models
 {
     public interface IShoppingListItem
     {
-        public IProduct Product { get; }
-        public int Count { get; }
-        public decimal TotalPrice { get; }
+        IProduct Product { get; }
+        int Count { get; }
+        decimal TotalPrice { get; }
     }
 }
