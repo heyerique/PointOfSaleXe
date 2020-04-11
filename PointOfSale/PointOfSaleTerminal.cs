@@ -107,7 +107,7 @@ namespace PointOfSale
 
             if (item == null)
             {
-                throw new NullReferenceException("No such product.");
+                throw new NullReferenceException($"No such product: {productCode}\n");
             }
 
             return item;
