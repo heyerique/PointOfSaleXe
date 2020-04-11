@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using PointOfSale;
 using POS = PointOfSale.PointOfSale;
 using Terminal = PointOfSale.PointOfSaleTerminal;

@@ -73,7 +73,10 @@ namespace PointOfSaleXe
                     });
                 }
 
-                PrintBill(customer, _terminal.CalculateTotal());
+                customer.Bill = _terminal.Bill;
+                _terminal.CalculateTotal();
+
+                PrintBill(customer);
             }
             catch (Exception e)
             {
@@ -81,7 +84,7 @@ namespace PointOfSaleXe
             }
         }
 
-        private void PrintBill(Customer customer, decimal totalPrice)
+        private void PrintBill(Customer customer)
         {
             if (customer == null)
             {
@@ -89,7 +92,8 @@ namespace PointOfSaleXe
             }
 
             var codeList = customer.ShoppingCart.Select(item => item.Code);
-            var codeListString = String.Concat(codeList);
+            var codeListString = string.Concat(codeList);
+            var totalPrice = customer.Bill?.TotalPrice ?? 0;
 
             Console.WriteLine($"Shopping items: {codeListString}");
             Console.WriteLine(string.Format("Total price: ${0:0.00}", totalPrice));
