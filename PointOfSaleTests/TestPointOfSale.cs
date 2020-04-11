@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using PointOfSale.Models;
 using POS = PointOfSale.PointOfSale;
+using System;
 
 namespace PointOfSaleTests
 {
@@ -49,6 +50,18 @@ namespace PointOfSaleTests
 
                 Assert.IsNotEmpty(products);
                 Assert.AreEqual(products, pointOfSale.Products);
+            });
+        }
+
+        [Test]
+        public void TestProducts3()
+        {
+            var productA = new ProductA();
+            var pointOfSale = new POS();
+
+            Assert.Throws<InvalidOperationException>(() => {
+                pointOfSale.AddProduct(productA);
+                pointOfSale.AddProduct(productA);
             });
         }
     }

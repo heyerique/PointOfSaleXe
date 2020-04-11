@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using PointOfSale.Models;
 
 namespace PointOfSale
@@ -37,6 +38,11 @@ namespace PointOfSale
             if (product == null)
             {
                 throw new ArgumentNullException("Product cannot be null.");
+            }
+
+            if (Products.Any(item => item.Equals(product)))
+            {
+                throw new InvalidOperationException($"Product is already existed: {product.Code}");
             }
 
             Products.Add(product);
