@@ -14,19 +14,15 @@ namespace PointOfSale
 
         public PointOfSale(List<Product> products)
         {
-            if (products == null)
-            {
-                return;
-            }
-
-            Products = products;
+            Products = products
+                ?? throw new ArgumentNullException("Products cannot be null.");
         }
 
         public void AddProduct(Product product)
         {
             if (product == null)
             {
-                return;
+                throw new ArgumentNullException("Product cannot be null.");
             }
 
             Products.Add(product);

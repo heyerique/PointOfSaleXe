@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using PointOfSale.Models;
@@ -27,19 +28,44 @@ namespace PointOfSaleTests
                 productA, productB, productC, productD
             };
 
-            foreach (var product in products)
+            try
             {
-                _pointOfSale.AddProduct(product);
-            }
+                foreach (var product in products)
+                {
+                    _pointOfSale.AddProduct(product);
+                }
 
-            _terminal.SetPricing(productA.Code, (decimal)1.25d);
-            _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
-            _terminal.SetPricing(productB.Code, (decimal)4.25d);
-            _terminal.SetPricing(productC.Code, (decimal)1.00d);
-            _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
-            _terminal.SetPricing(productD.Code, (decimal)0.75d);
+                _terminal.SetPricing(productA.Code, (decimal)1.25d);
+                _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
+                _terminal.SetPricing(productB.Code, (decimal)4.25d);
+                _terminal.SetPricing(productC.Code, (decimal)1.00d);
+                _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
+                _terminal.SetPricing(productD.Code, (decimal)0.75d);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
+        [Test]
+        public void TestTestScanProduct_WithoutPointOfSale()
+        {
+            var terminal = new Terminal();
+            var codes = "ABCDABA";
+
+            var codeList = codes.ToCharArray().ToList();
+
+            Assert.DoesNotThrow(() => {
+                foreach (var code in codeList)
+                {
+                    _terminal.ScanProduct(code.ToString());
+                }
+            });
+
+            Assert.IsNull(terminal.Bill);
+            Assert.AreEqual(terminal.CalculateTotal(), 0);
+        }
 
         [TestCase("A")]
         [TestCase("b")]
@@ -47,7 +73,9 @@ namespace PointOfSaleTests
         [TestCase("d")]
         public void TestScanProduct_UnitPrice1(string productCode)
         {
-            _terminal.ScanProduct(productCode);
+            Assert.DoesNotThrow(() => {
+                _terminal.ScanProduct(productCode);
+            });
 
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
@@ -63,10 +91,12 @@ namespace PointOfSaleTests
         {
             var count = 5;
 
-            for (var i = 0; i < count; i++)
-            {
-                _terminal.ScanProduct(productCode);
-            }
+            Assert.DoesNotThrow(() => {
+                for (var i = 0; i < count; i++)
+                {
+                    _terminal.ScanProduct(productCode);
+                }
+            });
 
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
@@ -80,9 +110,11 @@ namespace PointOfSaleTests
         [TestCase("A")]
         public void TestScanProduct_VolumePrice(string productCode)
         {
-            _terminal.ScanProduct(productCode);
-            _terminal.ScanProduct(productCode);
-            _terminal.ScanProduct(productCode);
+            Assert.DoesNotThrow(() => {
+                _terminal.ScanProduct(productCode);
+                _terminal.ScanProduct(productCode);
+                _terminal.ScanProduct(productCode);
+            });
 
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
@@ -96,16 +128,9 @@ namespace PointOfSaleTests
         [TestCase("e")]
         public void TestScanProduct_UnavailableProduct(string productCode)
         {
-            _terminal.ScanProduct(productCode);
-            _terminal.ScanProduct(productCode);
-            _terminal.ScanProduct(productCode);
-
-            var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
-
-            Assert.IsNull(product);
-            Assert.IsNull(_terminal.Bill);
-
-            Assert.AreEqual(_terminal.CalculateTotal(), 0);
+            Assert.Throws<NullReferenceException>(() => {
+                _terminal.ScanProduct(productCode);
+            });
         }
     }
 }

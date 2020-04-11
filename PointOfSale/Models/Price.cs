@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace PointOfSale.Models
 {
     public class Price : IPrice
@@ -28,7 +30,7 @@ namespace PointOfSale.Models
         {
             if (unitPrice <= 0)
             {
-                return;
+                throw new ArgumentOutOfRangeException("Price should be larger than 0.");
             }
 
             UnitPrice = unitPrice;
@@ -38,7 +40,7 @@ namespace PointOfSale.Models
         {
             if (volumePrice <= 0 || maxVolume < 1)
             {
-                return;
+                throw new ArgumentOutOfRangeException("Price should be larger than 0 and volume should be larger than 0.");
             }
 
             if (maxVolume == 1)

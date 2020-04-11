@@ -18,19 +18,15 @@ namespace PointOfSale.Models
 
         public void SetProduct(IProduct product)
         {
-            if (product == null)
-            {
-                return;
-            }
-
-            Product = product;
+            Product = product
+                ?? throw new ArgumentNullException("Product cannot be null.");
         }
 
         public void AddCount(int count = 1)
         {
             if (count <= 0)
             {
-                return;
+                throw new ArgumentOutOfRangeException("Count should be larger than 0.");
             }
 
             Count += count;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -27,20 +28,35 @@ namespace PointOfSaleTests
                 productA, productB, productC, productD
             };
 
-            foreach (var product in products)
+            try
             {
-                _pointOfSale.AddProduct(product);
+                foreach (var product in products)
+                {
+                    _pointOfSale.AddProduct(product);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        [Test]
+        public void TestSetPricing_WithoutPointOfSale()
+        {
+            var terminal = new Terminal();
+
+            Assert.Throws<NullReferenceException>(() => {
+                terminal.SetPricing("A", (decimal)1.25);
+            });
         }
 
         [TestCase("E", 1.25d)]
         public void TestSetPricing_UnavailableProduct(string productCode, decimal price)
         {
-            _terminal.SetPricing(productCode, price);
-
-            var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
-
-            Assert.IsNull(product);
+            Assert.Throws<NullReferenceException>(() => {
+                _terminal.SetPricing(productCode, price);
+            });
         }
 
         [TestCase("A", 1.25d)]
@@ -49,8 +65,10 @@ namespace PointOfSaleTests
         [TestCase("d", 1.25d)]
         public void TestSetUnitPrice1(string productCode, decimal price)
         {
-            _terminal.SetPricing(productCode, price);
-
+            Assert.DoesNotThrow(() => {
+                _terminal.SetPricing(productCode, price);
+            });
+            
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
             Assert.IsNotNull(product);
@@ -62,14 +80,9 @@ namespace PointOfSaleTests
         [TestCase("A", -100.00d)]
         public void TestSetUnitPrice2(string productCode, decimal price)
         {
-            _terminal.SetPricing(productCode, price);
-
-            var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
-
-            Assert.IsNotNull(product);
-            Assert.IsNotNull(product.Price);
-
-            Assert.AreEqual(product.Price.UnitPrice, 0);
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                _terminal.SetPricing(productCode, price);
+            });
         }
 
         [TestCase("a", 3.25d, 3)]
@@ -77,7 +90,9 @@ namespace PointOfSaleTests
         [TestCase("D", 6.00d, 6)]
         public void TestSetVolumePrice1(string productCode, decimal price, int volume)
         {
-            _terminal.SetPricing(productCode, price, volume);
+            Assert.DoesNotThrow(() => {
+                _terminal.SetPricing(productCode, price, volume);
+            });
 
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 
@@ -92,21 +107,17 @@ namespace PointOfSaleTests
         [TestCase("b", 100.00d, 0)]
         public void TestSetVolumePrice2(string productCode, decimal price, int volume)
         {
-            _terminal.SetPricing(productCode, price, volume);
-
-            var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
-
-            Assert.IsNotNull(product);
-            Assert.IsNotNull(product.Price);
-
-            Assert.AreEqual(product.Price.VolumePrice, 0);
-            Assert.AreEqual(product.Price.MaxVolume, 1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                _terminal.SetPricing(productCode, price, volume);
+            });
         }
 
         [TestCase("c", 1.25d, 1)]
         public void TestSetVolumePrice3(string productCode, decimal price, int volume)
         {
-            _terminal.SetPricing(productCode, price, volume);
+            Assert.DoesNotThrow(() => {
+                _terminal.SetPricing(productCode, price, volume);
+            });
 
             var product = _pointOfSale.Products.FirstOrDefault(item => item.Equals(productCode));
 

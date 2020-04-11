@@ -14,7 +14,7 @@ namespace PointOfSale.Models
         {
             if (product == null)
             {
-                return;
+                throw new ArgumentNullException("Product cannot be null.");
             }
 
             var listItem = _shoppingListItems.FirstOrDefault(item => item.Product.Equals(product));

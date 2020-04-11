@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using PointOfSale.Models;
@@ -27,17 +28,24 @@ namespace PointOfSaleTests
                 productA, productB, productC, productD
             };
 
-            foreach (var product in products)
+            try
             {
-                _pointOfSale.AddProduct(product);
-            }
+                foreach (var product in products)
+                {
+                    _pointOfSale.AddProduct(product);
+                }
 
-            _terminal.SetPricing(productA.Code, (decimal)1.25d);
-            _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
-            _terminal.SetPricing(productB.Code, (decimal)4.25d);
-            _terminal.SetPricing(productC.Code, (decimal)1.00d);
-            _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
-            _terminal.SetPricing(productD.Code, (decimal)0.75d);
+                _terminal.SetPricing(productA.Code, (decimal)1.25d);
+                _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
+                _terminal.SetPricing(productB.Code, (decimal)4.25d);
+                _terminal.SetPricing(productC.Code, (decimal)1.00d);
+                _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
+                _terminal.SetPricing(productD.Code, (decimal)0.75d);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         [TestCase("ABCDABA", 13.25d)]
@@ -48,28 +56,31 @@ namespace PointOfSaleTests
             var codeList = codes.ToCharArray().ToList();
             var distinctCodeList = codeList.Distinct();
 
-            foreach (var code in codeList)
+            Assert.DoesNotThrow(() =>
             {
-                _terminal.ScanProduct(code.ToString());
-            }
-
-            foreach (var code in distinctCodeList)
-            {
-                var codeCount = codeList.Count(c => c == code);
-                var item = _terminal.Bill.ShoppingList.FirstOrDefault(item => item.Product.Equals(code.ToString()));
-
-                if (item != null)
+                foreach (var code in codeList)
                 {
-                    Assert.AreEqual(codeCount, item.Count);
+                    _terminal.ScanProduct(code.ToString());
                 }
-            }
 
-            Assert.IsNotNull(_terminal.Bill);
-            Assert.IsNotEmpty(_terminal.Bill.ShoppingList);
+                foreach (var code in distinctCodeList)
+                {
+                    var codeCount = codeList.Count(c => c == code);
+                    var item = _terminal.Bill.ShoppingList.FirstOrDefault(item => item.Product.Equals(code.ToString()));
 
-            Assert.AreEqual(_terminal.Bill.ShoppingList.Count, distinctCodeList.Count());
+                    if (item != null)
+                    {
+                        Assert.AreEqual(codeCount, item.Count);
+                    }
+                }
 
-            Assert.AreEqual(_terminal.CalculateTotal(), totalPrice);
+                Assert.IsNotNull(_terminal.Bill);
+                Assert.IsNotEmpty(_terminal.Bill.ShoppingList);
+
+                Assert.AreEqual(_terminal.Bill.ShoppingList.Count, distinctCodeList.Count());
+
+                Assert.AreEqual(_terminal.CalculateTotal(), totalPrice);
+            });
         }
     }
 }

@@ -9,7 +9,7 @@ namespace PointOfSale
     {
         private Bill _bill;
 
-        private IPointOfSale _pointOfSale;
+        private readonly IPointOfSale _pointOfSale;
 
         public PointOfSaleTerminal()
         {
@@ -23,7 +23,8 @@ namespace PointOfSale
                 return;
             }
 
-            _pointOfSale = pointOfSale;
+            _pointOfSale = pointOfSale
+                ?? throw new ArgumentNullException("PointOfSale cannot be empty.");
         }
 
         public decimal CalculateTotal()
@@ -40,11 +41,6 @@ namespace PointOfSale
         {
             var productItem = GetProductByCode(productCode);
 
-            if (productItem == null)
-            {
-                return;
-            }
-
             if (_bill == null)
             {
                 _bill = new Bill();
@@ -56,18 +52,25 @@ namespace PointOfSale
         public void SetPricing(string productCode, decimal unitPrice)
         {
             var productItem = GetProductByCode(productCode);
-            productItem?.SetPrice(unitPrice);
+            productItem.SetPrice(unitPrice);
         }
 
         public void SetPricing(string productCode, decimal volumePrice, int maxVolume)
         {
             var productItem = GetProductByCode(productCode);
-            productItem?.SetPrice(volumePrice, maxVolume);
+            productItem.SetPrice(volumePrice, maxVolume);
         }
 
         private Product GetProductByCode(string productCode)
         {
-            return _pointOfSale?.Products.FirstOrDefault(item => item.Equals(productCode));
+            var item = _pointOfSale?.Products.FirstOrDefault(item => item.Equals(productCode));
+
+            if (item == null)
+            {
+                throw new NullReferenceException("No such product.");
+            }
+
+            return item;
         }
     }
 }

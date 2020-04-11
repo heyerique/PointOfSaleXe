@@ -19,10 +19,12 @@ namespace PointOfSaleTests
                 productA, productB, productC, productD
             };
 
-            var pointOfSale = new POS(products);
+            Assert.DoesNotThrow(() => {
+                var pointOfSale = new POS(products);
 
-            Assert.IsNotEmpty(products);
-            Assert.AreEqual(products, pointOfSale.Products);
+                Assert.IsNotEmpty(products);
+                Assert.AreEqual(products, pointOfSale.Products);
+            });
         }
 
         [Test]
@@ -39,13 +41,15 @@ namespace PointOfSaleTests
 
             var pointOfSale = new POS();
 
-            foreach (var product in products)
-            {
-                pointOfSale.AddProduct(product);
-            }
+            Assert.DoesNotThrow(() => {
+                foreach (var product in products)
+                {
+                    pointOfSale.AddProduct(product);
+                }
 
-            Assert.IsNotEmpty(products);
-            Assert.AreEqual(products, pointOfSale.Products);
+                Assert.IsNotEmpty(products);
+                Assert.AreEqual(products, pointOfSale.Products);
+            });
         }
     }
 }
