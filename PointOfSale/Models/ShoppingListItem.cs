@@ -11,17 +11,35 @@ namespace PointOfSale.Models
         {
         }
 
+        /**
+         * <summary>
+         * Initialises a ShoppingListItem object with a product object.
+         * </summary>
+         * <param name="product"><see cref="IProduct"/>: product object</param>
+         **/
         public ShoppingListItem(IProduct product)
         {
             SetProduct(product);
         }
 
+        /**
+         * <summary>Sets the value of Product.</summary>
+         * <param name="product"><see cref="IProduct"/>: product object</param>
+         * <exception cref="ArgumentNullException"></exception>
+         **/
         public void SetProduct(IProduct product)
         {
             Product = product
                 ?? throw new ArgumentNullException("Product cannot be null.");
         }
 
+        /**
+         * <summary>Adds the count of the product.</summary>
+         * <param name="count">
+         * int: the count to be added. Default value is 1.
+         * </param>
+         * <exception cref="ArgumentOutOfRangeException"></exception>
+         **/
         public void AddCount(int count = 1)
         {
             if (count <= 0)

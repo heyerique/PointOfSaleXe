@@ -10,6 +10,11 @@ namespace PointOfSale.Models
 
         public List<IShoppingListItem> ShoppingList => _shoppingListItems.Select(item => item as IShoppingListItem).ToList();
 
+        /**
+         * <summary>Adds a product into the shopping list.</summary>
+         * <param name="product"><see cref="IProduct"/>: product object</param>
+         * <exception cref="ArgumentNullException"></exception>
+        **/
         public void AddProduct(IProduct product)
         {
             if (product == null)

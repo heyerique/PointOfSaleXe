@@ -12,12 +12,26 @@ namespace PointOfSale
         {
         }
 
+        /**
+         * <summary>
+         * Initialises a PointOfSale instance with a product list.
+         * </summary>
+         * <param name="products">
+         * List(<see cref="Product"/>): a product list
+         * </param>
+         * <exception cref="ArgumentNullException"></exception>
+         **/
         public PointOfSale(List<Product> products)
         {
             Products = products
                 ?? throw new ArgumentNullException("Products cannot be null.");
         }
 
+        /**
+         *  <summary>Adds a product to the PointOfSale.</summary>
+         *  <param name="product"><see cref="Product"/>: product object</param>
+         *  <exception cref="ArgumentNullException"></exception>
+         **/
         public void AddProduct(Product product)
         {
             if (product == null)
