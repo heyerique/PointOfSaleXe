@@ -17,7 +17,7 @@ namespace PointOfSaleXe
             Init();
 
             var customerService = new CustomerService(_terminal);
-            customerService.ProcessCustomers();
+            customerService.Start();
         }
 
         private static void Init()

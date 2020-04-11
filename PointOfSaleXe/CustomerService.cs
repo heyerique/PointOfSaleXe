@@ -8,68 +8,42 @@ namespace PointOfSaleXe
 {
     public class CustomerService
     {
-        private readonly IPointOfSaleTerminal _terminal;
+        private static IPointOfSaleTerminal _terminal;
 
         public CustomerService(IPointOfSaleTerminal terminal)
         {
             _terminal = terminal;
         }
 
-        public void ProcessCustomers()
+        public void Start()
         {
-            var productA = new ProductA();
-            var productB = new ProductB();
-            var productC = new ProductC();
-            var productD = new ProductD();
+            var customer = new Customer();
 
-            var customerA = new Customer();
-            customerA.ShoppingCart = new List<IProduct> {
-                    productA,
-                    productB,
-                    productC,
-                    productD,
-                    productA,
-                    productB,
-                    productA
-                };
+            while (string.IsNullOrWhiteSpace(customer.ShoppingList))
+            {
+                Console.WriteLine("Please input product codes: ");
+                customer.ShoppingList = Console.ReadLine();
+            }
 
-            var customerB = new Customer();
-            customerB.ShoppingCart = new List<IProduct> {
-                    productC,
-                    productC,
-                    productC,
-                    productC,
-                    productC,
-                    productC,
-                    productC
-                };
-
-            var customerC = new Customer();
-            customerC.ShoppingCart = new List<IProduct> {
-                    productA,
-                    productB,
-                    productC,
-                    productD,
-                };
-
-            ProcessCustomer(customerA);
-            ProcessCustomer(customerB);
-            ProcessCustomer(customerC);
+            ProcessCustomer(customer);
         }
 
         private void ProcessCustomer(Customer customer)
         {
-            if (customer == null)
+            if (customer == null
+                || string.IsNullOrWhiteSpace(customer.ShoppingList))
             {
                 return;
             }
 
+            var productCodes = customer.ShoppingList.ToCharArray();
+
             try
             {
-                foreach (var product in customer.ShoppingCart)
+                foreach (var code in productCodes)
                 {
                     Utils.DoSafe(() => {
-                        _terminal.ScanProduct(product.Code);
+                        _terminal.ScanProduct(code.ToString());
                     });
                 }
 
@@ -91,11 +65,8 @@ namespace PointOfSaleXe
                 return;
             }
 
-            var codeList = customer.ShoppingCart.Select(item => item.Code);
-            var codeListString = string.Concat(codeList);
             var totalPrice = customer.Bill?.TotalPrice ?? 0;
 
-            Console.WriteLine($"Shopping items: {codeListString}");
             Console.WriteLine(string.Format("Total price: ${0:0.00}", totalPrice));
             Console.WriteLine();
         }
