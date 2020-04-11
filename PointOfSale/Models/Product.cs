@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 namespace PointOfSale.Models
 {
     public abstract class Product : IProduct
@@ -19,6 +19,11 @@ namespace PointOfSale.Models
          **/
         public Product(string code)
         {
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                throw new ArgumentNullException("Product code cannot be empty");
+            }
+
             Code = code;
         }
 
@@ -29,9 +34,8 @@ namespace PointOfSale.Models
          * <param name="code">string: product code</param>
          * <param name="unitPrice">decimal: unit price</param>
          **/
-        public Product(string code, decimal unitPrice)
+        public Product(string code, decimal unitPrice) : this(code)
         {
-            Code = code;
             SetPrice(unitPrice);
         }
 

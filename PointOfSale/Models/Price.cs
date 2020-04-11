@@ -25,15 +25,18 @@ namespace PointOfSale.Models
         }
 
         /**
-         * <summary>Initialises Price object with volume price.</summary>
+         * <summary>
+         * Initialises Price object with unit price and volume price.
+         * </summary>
+         * <param name="unitPrice">decimal: unit price</param>
          * <param name="volumePrice">decimal: volume price</param>
          * <param name="maxVolume">
          * int: the count of a product in a volume set.
          * </param>
          **/
         public Price(decimal unitPrice, decimal volumePrice, int maxVolume)
+            : this(unitPrice)
         {
-            SetPrice(unitPrice);
             SetPrice(volumePrice, maxVolume);
         }
 
