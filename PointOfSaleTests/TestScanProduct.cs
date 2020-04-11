@@ -5,6 +5,7 @@ using NUnit.Framework;
 using PointOfSale.Models;
 using POS = PointOfSale.PointOfSale;
 using Terminal = PointOfSale.PointOfSaleTerminal;
+using Utils = PointOfSale.Utils;
 
 namespace PointOfSaleTests
 {
@@ -28,24 +29,43 @@ namespace PointOfSaleTests
                 productA, productB, productC, productD
             };
 
-            try
+            foreach (var product in products)
             {
-                foreach (var product in products)
+                Utils.DoSafe(() =>
                 {
                     _pointOfSale.AddProduct(product);
-                }
+                });
+            }
 
-                _terminal.SetPricing(productA.Code, (decimal)1.25d);
-                _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
-                _terminal.SetPricing(productB.Code, (decimal)4.25d);
-                _terminal.SetPricing(productC.Code, (decimal)1.00d);
-                _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
-                _terminal.SetPricing(productD.Code, (decimal)0.75d);
-            }
-            catch (Exception e)
+            Utils.DoSafe(() =>
             {
-                Console.WriteLine(e.Message);
-            }
+                _terminal.SetPricing(productA.Code, (decimal)1.25d);
+            });
+
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
+            });
+
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productB.Code, (decimal)4.25d);
+            });
+
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productC.Code, (decimal)1.00d);
+            });
+
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
+            });
+
+            Utils.DoSafe(() =>
+            {
+                _terminal.SetPricing(productD.Code, (decimal)0.75d);
+            });
         }
 
         [Test]

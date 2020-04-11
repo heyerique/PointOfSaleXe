@@ -5,6 +5,7 @@ using NUnit.Framework;
 using PointOfSale.Models;
 using POS = PointOfSale.PointOfSale;
 using Terminal = PointOfSale.PointOfSaleTerminal;
+using Utils = PointOfSale.Utils;
 
 namespace PointOfSaleTests
 {
@@ -28,16 +29,13 @@ namespace PointOfSaleTests
                 productA, productB, productC, productD
             };
 
-            try
+
+            foreach (var product in products)
             {
-                foreach (var product in products)
+                Utils.DoSafe(() =>
                 {
                     _pointOfSale.AddProduct(product);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                });
             }
         }
 

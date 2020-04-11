@@ -1,5 +1,7 @@
 ﻿using System;
-namespace PointOfSale.Models
+using PointOfSale.Models;
+
+namespace PointOfSale
 {
     public interface IPointOfSaleTerminal
     {
