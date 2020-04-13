@@ -9,14 +9,14 @@ namespace PointOfSaleXe
 {
     class Program
     {
-        private static IPointOfSale _pointOfSale;
-        private static IPointOfSaleTerminal _terminal;
+        public static IPointOfSale PointOfSale { get; private set; }
+        public static IPointOfSaleTerminal Terminal { get; private set; }
 
         static void Main(string[] args)
         {
             Init();
 
-            var customerService = new CustomerService(_terminal);
+            var customerService = new CustomerService(Terminal);
             customerService.Start();
         }
 
@@ -31,37 +31,37 @@ namespace PointOfSaleXe
                 productA, productB, productC, productD
             };
 
-            _pointOfSale = new POS(products);
-            _terminal = new Terminal(_pointOfSale);
+            PointOfSale = new POS(products);
+            Terminal = new Terminal(PointOfSale);
 
             Utils.DoSafe(() =>
             {
-                _terminal.SetPricing(productA.Code, (decimal)1.25d);
+                Terminal.SetPricing(productA.Code, (decimal)1.25d);
             });
 
             Utils.DoSafe(() =>
             {
-                _terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
+                Terminal.SetPricing(productA.Code, (decimal)3.00d, 3);
             });
 
             Utils.DoSafe(() =>
             {
-                _terminal.SetPricing(productB.Code, (decimal)4.25d);
+                Terminal.SetPricing(productB.Code, (decimal)4.25d);
             });
 
             Utils.DoSafe(() =>
             {
-                _terminal.SetPricing(productC.Code, (decimal)1.00d);
+                Terminal.SetPricing(productC.Code, (decimal)1.00d);
             });
 
             Utils.DoSafe(() =>
             {
-                _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
+                Terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
             });
 
             Utils.DoSafe(() =>
             {
-                _terminal.SetPricing(productD.Code, (decimal)0.75d);
+                Terminal.SetPricing(productD.Code, (decimal)0.75d);
             });
         }
     }

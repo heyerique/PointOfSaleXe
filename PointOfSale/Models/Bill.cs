@@ -13,13 +13,19 @@ namespace PointOfSale.Models
         /**
          * <summary>Adds a product into the shopping list.</summary>
          * <param name="product"><see cref="IProduct"/>: product object</param>
-         * <exception cref="ArgumentNullException"></exception>
+         * <exception cref="ArgumentNullException">Product is null</exception>
+         * <exception cref="NullReferenceException">Price is null</exception>
         **/
         public void AddProduct(IProduct product)
         {
             if (product == null)
             {
                 throw new ArgumentNullException("Product cannot be null.");
+            }
+
+            if (!product.HasPrice)
+            {
+                throw new NullReferenceException($"The price of {product.Code} is not set.");
             }
 
             var listItem = _shoppingListItems.FirstOrDefault(item => item.Product.Equals(product));

@@ -58,10 +58,10 @@ namespace PointOfSaleTests
         }
 
         [TestCase("A", 1.25d)]
-        [TestCase("b", 1.25d)]
-        [TestCase("C", 1.25d)]
-        [TestCase("d", 1.25d)]
-        public void TestSetUnitPrice1(string productCode, decimal price)
+        [TestCase("b", 0.75d)]
+        [TestCase("C", 3.05d)]
+        [TestCase("d", 2d)]
+        public void TestSetUnitPrice(string productCode, decimal price)
         {
             Assert.DoesNotThrow(() => {
                 _terminal.SetPricing(productCode, price);
@@ -76,7 +76,7 @@ namespace PointOfSaleTests
         }
 
         [TestCase("A", -100.00d)]
-        public void TestSetUnitPrice2(string productCode, decimal price)
+        public void TestSetUnitPrice_InvalidValues(string productCode, decimal price)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => {
                 _terminal.SetPricing(productCode, price);
@@ -86,7 +86,7 @@ namespace PointOfSaleTests
         [TestCase("a", 3.25d, 3)]
         [TestCase("B", 2.00d, 3)]
         [TestCase("D", 6.00d, 6)]
-        public void TestSetVolumePrice1(string productCode, decimal price, int volume)
+        public void TestSetVolumePrice(string productCode, decimal price, int volume)
         {
             Assert.DoesNotThrow(() => {
                 _terminal.SetPricing(productCode, price, volume);
@@ -103,7 +103,7 @@ namespace PointOfSaleTests
 
         [TestCase("A", -3.00d, -3)]
         [TestCase("b", 100.00d, 0)]
-        public void TestSetVolumePrice2(string productCode, decimal price, int volume)
+        public void TestSetVolumePrice_InvalidValues(string productCode, decimal price, int volume)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => {
                 _terminal.SetPricing(productCode, price, volume);
@@ -111,7 +111,7 @@ namespace PointOfSaleTests
         }
 
         [TestCase("c", 1.25d, 1)]
-        public void TestSetVolumePrice3(string productCode, decimal price, int volume)
+        public void TestSetVolumePrice_SetSingleVolume(string productCode, decimal price, int volume)
         {
             Assert.DoesNotThrow(() => {
                 _terminal.SetPricing(productCode, price, volume);
@@ -123,8 +123,8 @@ namespace PointOfSaleTests
             Assert.IsNotNull(product.Price);
 
             Assert.AreEqual(product.Price.UnitPrice, price);
-            Assert.AreEqual(product.Price.VolumePrice, 0);
-            Assert.AreEqual(product.Price.MaxVolume, volume);
+            Assert.IsNull(product.Price.VolumePrice);
+            Assert.IsNull(product.Price.MaxVolume);
         }
     }
 }

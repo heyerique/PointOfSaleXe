@@ -5,39 +5,16 @@ namespace PointOfSale.Models
 {
     public class Price : IPrice
     {
-        public decimal UnitPrice { get; private set; }
+        public decimal? UnitPrice { get; private set; }
 
-        public decimal VolumePrice { get; private set; }
+        public decimal? VolumePrice { get; private set; }
 
-        public int MaxVolume { get; private set; } = 1;
+        public int? MaxVolume { get; private set; }
+
+        public bool HasVolumePrice => VolumePrice != null && MaxVolume != null;
 
         public Price()
         {
-        }
-
-        /**
-         * <summary>Initialises Price object with unit price.</summary>
-         * <param name="unitPrice">decimal: unit price</param>
-         **/
-        public Price(decimal unitPrice)
-        {
-            SetPrice(unitPrice);
-        }
-
-        /**
-         * <summary>
-         * Initialises Price object with unit price and volume price.
-         * </summary>
-         * <param name="unitPrice">decimal: unit price</param>
-         * <param name="volumePrice">decimal: volume price</param>
-         * <param name="maxVolume">
-         * int: the count of a product in a volume set.
-         * </param>
-         **/
-        public Price(decimal unitPrice, decimal volumePrice, int maxVolume)
-            : this(unitPrice)
-        {
-            SetPrice(volumePrice, maxVolume);
         }
 
         /**
@@ -47,7 +24,7 @@ namespace PointOfSale.Models
         **/
         public void SetPrice(decimal unitPrice)
         {
-            if (unitPrice <= 0)
+            if (unitPrice < 0)
             {
                 throw new ArgumentOutOfRangeException("Price should be larger than 0.");
             }
@@ -65,7 +42,7 @@ namespace PointOfSale.Models
         **/
         public void SetPrice(decimal volumePrice, int maxVolume)
         {
-            if (volumePrice <= 0 || maxVolume < 1)
+            if (volumePrice < 0 || maxVolume < 1)
             {
                 throw new ArgumentOutOfRangeException("Price should be larger than 0 and volume should be larger than 0.");
             }

@@ -7,6 +7,8 @@ namespace PointOfSale.Models
 
         IPrice Price { get; }
 
+        bool HasPrice { get; }
+
         /**
          * <summary>
          * Compare two products to check if they are the same.

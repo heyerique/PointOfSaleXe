@@ -61,11 +61,6 @@ namespace PointOfSaleTests
             {
                 _terminal.SetPricing(productC.Code, (decimal)5.00d, 6);
             });
-
-            Utils.DoSafe(() =>
-            {
-                _terminal.SetPricing(productD.Code, (decimal)0.75d);
-            });
         }
 
         [Test]
@@ -76,22 +71,18 @@ namespace PointOfSaleTests
 
             var codeList = codes.ToCharArray().ToList();
 
-            Assert.DoesNotThrow(() => {
+            Assert.Throws<NullReferenceException>(() => {
                 foreach (var code in codeList)
                 {
                     _terminal.ScanProduct(code.ToString());
                 }
             });
-
-            Assert.IsNull(terminal.Bill);
-            Assert.AreEqual(terminal.CalculateTotal(), 0);
         }
 
         [TestCase("A")]
         [TestCase("b")]
         [TestCase("C")]
-        [TestCase("d")]
-        public void TestScanProduct_UnitPrice1(string productCode)
+        public void TestScanProduct_UnitPrice_SingleScanning(string productCode)
         {
             Assert.DoesNotThrow(() => {
                 _terminal.ScanProduct(productCode);
@@ -107,7 +98,7 @@ namespace PointOfSaleTests
         }
 
         [TestCase("C")]
-        public void TestScanProduct_UnitPrice2(string productCode)
+        public void TestScanProduct_UnitPrice_MultipleScanning(string productCode)
         {
             var count = 5;
 
@@ -143,6 +134,14 @@ namespace PointOfSaleTests
             Assert.IsNotEmpty(_terminal.Bill.ShoppingList);
 
             Assert.AreEqual(_terminal.CalculateTotal(), product.Price.VolumePrice);
+        }
+
+        [TestCase("d")]
+        public void TestScanProduct_NoPrice(string productCode)
+        {
+            Assert.Throws<NullReferenceException>(() => {
+                _terminal.ScanProduct(productCode);
+            });
         }
 
         [TestCase("e")]

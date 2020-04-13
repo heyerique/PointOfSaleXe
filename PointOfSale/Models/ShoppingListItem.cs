@@ -55,22 +55,23 @@ namespace PointOfSale.Models
             get
             {
                 if (Product == null
-                    || Product.Price == null
-                    || Count == 0)
+                    || Count == 0
+                    || !Product.HasPrice)
                 {
                     return 0;
                 }
 
-                if (Product.Price.MaxVolume == 1)
+                if (!Product.Price.HasVolumePrice
+                    || Product.Price.MaxVolume == 1)
                 {
-                    return Product.Price.UnitPrice * Count;
+                    return (decimal)Product.Price.UnitPrice * Count;
                 }
 
-                var unitCount = Count % Product.Price.MaxVolume;
-                var unitTotalPrice = unitCount * Product.Price.UnitPrice;
+                var unitCount = Count % (decimal)Product.Price.MaxVolume;
+                var unitTotalPrice = unitCount * (decimal)Product.Price.UnitPrice;
 
-                var volumeCount = Math.Floor((decimal)(Count / Product.Price.MaxVolume));
-                var volumeTotalPrice = volumeCount * Product.Price.VolumePrice;
+                var volumeCount = Math.Floor((decimal)(Count / (int)Product.Price.MaxVolume));
+                var volumeTotalPrice = volumeCount * (decimal)Product.Price.VolumePrice;
 
                 return volumeTotalPrice + unitTotalPrice;
             }

@@ -9,6 +9,8 @@ namespace PointOfSale.Models
 
         public IPrice Price => _price;
 
+        public bool HasPrice => Price != null && Price.UnitPrice != null;
+
         public Product()
         {
         }
@@ -25,18 +27,6 @@ namespace PointOfSale.Models
             }
 
             Code = code;
-        }
-
-        /**
-         * <summary>
-         * Initialises a Product object with product code and unit price.
-         * </summary>
-         * <param name="code">string: product code</param>
-         * <param name="unitPrice">decimal: unit price</param>
-         **/
-        public Product(string code, decimal unitPrice) : this(code)
-        {
-            SetPrice(unitPrice);
         }
 
         /**
