@@ -5,7 +5,7 @@ using NUnit.Framework;
 using PointOfSale.Models;
 using POS = PointOfSale.PointOfSale;
 using Terminal = PointOfSale.PointOfSaleTerminal;
-using Utils = PointOfSale.Utils;
+using PointOfSale;
 
 namespace PointOfSaleTests
 {
@@ -67,14 +67,14 @@ namespace PointOfSaleTests
         public void TestTestScanProduct_WithoutPointOfSale()
         {
             var terminal = new Terminal();
-            var codes = "ABCDABA";
+            var codes = "ABCABA";
 
             var codeList = codes.ToCharArray().ToList();
 
-            Assert.Throws<NullReferenceException>(() => {
+            Assert.Throws<NullProductException>(() => {
                 foreach (var code in codeList)
                 {
-                    _terminal.ScanProduct(code.ToString());
+                    terminal.ScanProduct(code.ToString());
                 }
             });
         }
@@ -139,7 +139,7 @@ namespace PointOfSaleTests
         [TestCase("d")]
         public void TestScanProduct_NoPrice(string productCode)
         {
-            Assert.Throws<NullReferenceException>(() => {
+            Assert.Throws<NullPriceException>(() => {
                 _terminal.ScanProduct(productCode);
             });
         }
@@ -147,7 +147,7 @@ namespace PointOfSaleTests
         [TestCase("e")]
         public void TestScanProduct_UnavailableProduct(string productCode)
         {
-            Assert.Throws<NullReferenceException>(() => {
+            Assert.Throws<NullProductException>(() => {
                 _terminal.ScanProduct(productCode);
             });
         }

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using PointOfSale;
 using PointOfSale.Models;
 using POS = PointOfSale.PointOfSale;
 using Terminal = PointOfSale.PointOfSaleTerminal;
-using Utils = PointOfSale.Utils;
 
 namespace PointOfSaleTests
 {
@@ -44,7 +44,7 @@ namespace PointOfSaleTests
         {
             var terminal = new Terminal();
 
-            Assert.Throws<NullReferenceException>(() => {
+            Assert.Throws<NullProductException>(() => {
                 terminal.SetPricing("A", (decimal)1.25);
             });
         }
@@ -52,7 +52,7 @@ namespace PointOfSaleTests
         [TestCase("E", 1.25d)]
         public void TestSetPricing_UnavailableProduct(string productCode, decimal price)
         {
-            Assert.Throws<NullReferenceException>(() => {
+            Assert.Throws<NullProductException>(() => {
                 _terminal.SetPricing(productCode, price);
             });
         }

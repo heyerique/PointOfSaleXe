@@ -20,12 +20,12 @@ namespace PointOfSale.Models
         {
             if (product == null)
             {
-                throw new ArgumentNullException("Product cannot be null.");
+                throw new NullProductException();
             }
 
             if (!product.HasPrice)
             {
-                throw new NullReferenceException($"The price of {product.Code} is not set.");
+                throw new NullPriceException($"The price for the product ${product.Code} is not set.");
             }
 
             var listItem = _shoppingListItems.FirstOrDefault(item => item.Product.Equals(product));

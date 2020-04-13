@@ -2,14 +2,14 @@
 using NUnit.Framework;
 using PointOfSale.Models;
 using POS = PointOfSale.PointOfSale;
-using System;
+using PointOfSale;
 
 namespace PointOfSaleTests
 {
     public class TestPointOfSale
     {
         [Test]
-        public void TestProducts1()
+        public void TestPointOfSale_InitialiseWithProductList()
         {
             var productA = new ProductA();
             var productB = new ProductB();
@@ -29,7 +29,7 @@ namespace PointOfSaleTests
         }
 
         [Test]
-        public void TestProducts2()
+        public void TestPointOfSale_AddProducts()
         {
             var productA = new ProductA();
             var productB = new ProductB();
@@ -54,13 +54,16 @@ namespace PointOfSaleTests
         }
 
         [Test]
-        public void TestProducts3()
+        public void TestPointOfSale_AddDuplicatedProducts()
         {
             var productA = new ProductA();
             var pointOfSale = new POS();
 
-            Assert.Throws<InvalidOperationException>(() => {
+            Assert.DoesNotThrow(() => {
                 pointOfSale.AddProduct(productA);
+            });
+
+            Assert.Throws<DuplicatedProductException>(() => {
                 pointOfSale.AddProduct(productA);
             });
         }

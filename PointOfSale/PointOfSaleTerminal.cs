@@ -24,12 +24,10 @@ namespace PointOfSale
          *  <param name="pointOfSale"><see cref="IPointOfSale"/>
          *  : instance of IPointOfSale
          *  </param>
-         *  <exception cref="ArgumentNullException"></exception>
          **/
         public PointOfSaleTerminal(IPointOfSale pointOfSale)
         {
-            _pointOfSale = pointOfSale
-                ?? throw new ArgumentNullException("PointOfSale cannot be empty.");
+            _pointOfSale = pointOfSale;
         }
 
         /**
@@ -107,7 +105,7 @@ namespace PointOfSale
 
             if (item == null)
             {
-                throw new NullReferenceException($"No such product: {productCode}\n");
+                throw new NullProductException($"Product {productCode} cannot be found.");
             }
 
             return item;

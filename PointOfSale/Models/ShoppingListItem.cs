@@ -25,12 +25,11 @@ namespace PointOfSale.Models
         /**
          * <summary>Sets the value of Product.</summary>
          * <param name="product"><see cref="IProduct"/>: product object</param>
-         * <exception cref="ArgumentNullException"></exception>
+         * <exception cref="NullProductException"></exception>
          **/
         public void SetProduct(IProduct product)
         {
-            Product = product
-                ?? throw new ArgumentNullException("Product cannot be null.");
+            Product = product ?? throw new NullProductException();
         }
 
         /**
