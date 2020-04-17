@@ -26,10 +26,21 @@ namespace PointOfSale.Models
          * <summary>Sets the value of Product.</summary>
          * <param name="product"><see cref="IProduct"/>: product object</param>
          * <exception cref="NullProductException"></exception>
+         * <exception cref="NullPriceException"></exception>
          **/
         public void SetProduct(IProduct product)
         {
-            Product = product ?? throw new NullProductException();
+            if (product == null)
+            {
+                throw new NullProductException();
+            }
+
+            if (!product.HasPrice)
+            {
+                throw new NullPriceException($"The price for the product ${product.Code} is not set.");
+            }
+
+            Product = product;
         }
 
         /**
